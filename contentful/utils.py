@@ -1,10 +1,10 @@
 import contentful_management
 import os
 
-space = 'h4hrqjr8n9ag' #os.environ['space_id']
-environment = 'master' #os.environ['environment']
-access_token = 'CFPAT-dMmdr4NhKIRRlLMOoooPSJDAE7Bk8mf7pWJA9GblAqE' #os.environ['access_token']
-client =  contentful_management.Client(access_token)
+space = os.environ['space_id']
+environment = os.environ['environment']
+cma_token =  os.environ['cma_token']
+client =  contentful_management.Client(cma_token)
 music_space = client.spaces().find(space)
 environment = music_space.environments().find('master')
 
