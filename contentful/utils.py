@@ -1,18 +1,34 @@
 import contentful_management
 import os
 
-space = os.environ['space_id']
-environment = os.environ['environment']
-access_token = os.environ['access_token']
-client =  contentful_management.Client(access_token=access_token, space_id=space, environment_id=environment)
+space = 'h4hrqjr8n9ag' #os.environ['space_id']
+environment = 'master' #os.environ['environment']
+access_token = 'CFPAT-dMmdr4NhKIRRlLMOoooPSJDAE7Bk8mf7pWJA9GblAqE' #os.environ['access_token']
+client =  contentful_management.Client(access_token)
+music_space = client.spaces().find(space)
+environment = music_space.environments().find('master')
 
-def create_entry(content_type_id, fields):
-    entry = environment.create_entry(content_type_id, fields=fields)
+def create_entry(entry_id, entry_attributes):
+    existing_entry = get_entry(entry_id)
+    if existing_entry is not None:
+        print(f"Entry with ID {entry_id} already exists.")
+        return existing_entry
+    entry = environment.entries().create(entry_id, entry_attributes)
+    if not entry:
+        raise Exception(f"Failed to create entry with ID {entry_id}.")
+    publish_entry(entry)
     return entry
 
 def get_entry(entry_id):
-    entry = environment.get_entry(entry_id)
-    return entry
+    try:
+        entry = environment.entries().find(entry_id)
+        return entry
+    except contentful_management.errors.NotFoundError:
+        # Entry not found
+        return None
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return None
 
 def update_entry(entry_id, fields):
     entry = environment.update_entry(entry_id, fields=fields)
@@ -25,3 +41,13 @@ def delete_entry(entry_id):
 def publish_entry(entry):
     entry.publish()
     return 
+
+### Non Contentful Functions ###
+def transform_title_to_id(title):
+    """
+    Transform the album title into a suitable ID format.
+    
+    :param album_title: The title of the album.
+    :return: A string representing the album ID.
+    """
+    return title.lower().replace(" ", "-").replace("'", "").replace(".", "")

@@ -1,28 +1,29 @@
 import sys
 from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QLineEdit
-
+from contentful.add_lyricist import create_lyricist_payload
+from contentful.add_singer import create_singer_payload
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Contentful: Add New ARR Album')
+        self.setWindowTitle('Contentful: Add Album Details')
         self.layout = QVBoxLayout()
        
         self.setAlbumAdditionLayout()
 
         self.setLayout(self.layout)
 
-    def on_button_click(self):
-        self.label.setText('Button Clicked!')
+    def on_lyricist_button_click(self):
+        create_lyricist_payload()
+    
+    def on_singer_button_click(self):
+        create_singer_payload()
     
     def setAlbumAdditionLayout(self):
-        self.label = QLabel('Album Name:')
-        self.albumName = QLineEdit('Enter album name here')
+        self.lyricist_add_btn = QPushButton('Add Lyricists')
+        self.lyricist_add_btn.clicked.connect(self.on_lyricist_button_click)
 
-        self.button = QPushButton('Add Album')
-
-        self.button.clicked.connect(self.on_button_click)
-        self.layout.addWidget(self.label)
-        self.layout.addWidget(self.albumName)
+        self.singer_add_btn = QPushButton('Add Singers')
+        self.singer_add_btn.clicked.connect(self.on_singer_button_click)
         self.layout.addWidget(self.button)
 
 if __name__ == '__main__':
