@@ -1,9 +1,11 @@
 import contentful_management
+from dotenv import load_dotenv
 import os
+load_dotenv()
 
-space = os.environ['space_id']
-environment = os.environ['environment']
-cma_token =  os.environ['cma_token']
+space = os.environ.get("space_id")
+environment = os.environ.get("environment")
+cma_token =  os.environ.get("cma_token")
 client =  contentful_management.Client(cma_token)
 music_space = client.spaces().find(space)
 environment = music_space.environments().find('master')
